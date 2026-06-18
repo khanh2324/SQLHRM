@@ -89,54 +89,6 @@ ALTER DATABASE SCOPED CONFIGURATION SET QUERY_OPTIMIZER_HOTFIXES = OFF;
 GO
 USE [CLOUD_ADCO_TEST]
 GO
-/****** Object:  User [toanhcm]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [toanhcm] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [thucnv]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [thucnv] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [nhunh]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [nhunh] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [nhansu]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [nhansu] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [mhson]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [mhson] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [loihcm]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [loihcm] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [Hungtd]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [Hungtd] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [hautt]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [hautt] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [ghr]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [ghr] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [aidan]    Script Date: 03/04/2026 16:11:43 ******/
-CREATE USER [aidan] FOR LOGIN [aidan] WITH DEFAULT_SCHEMA=[dbo]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [toanhcm]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [thucnv]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [nhunh]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [nhansu]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [mhson]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [loihcm]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [Hungtd]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [hautt]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [ghr]
-GO
 /****** Object:  UserDefinedTableType [dbo].[IntList]    Script Date: 03/04/2026 16:11:43 ******/
 CREATE TYPE [dbo].[IntList] AS TABLE(
 	[ID] [int] NOT NULL,
@@ -237,13 +189,9 @@ DECLARE @NCC INT = (SELECT dbo.fns_LayNgayCongChuan(@NhanVienID, @NgayBD_CongTha
     
  DECLARE @SoNgay decimal(10,4) = 0      
  SET @SoNgay=(SELECT SUM(SoGioLam) FROM  NS_TL_ChamCong     
- WHERE NhanVienID = @NhanVienID and NgayChamCong  between @NgayBD_CongThang and  @NgayKT_CongThang and LoaiChamCongID in (SELECT LoaiChamCongID FROM NS_TL_LoaiChamCong where MaSo in(N'CTL',N'CXN',N'T') ))      
-      
+ WHERE NhanVienID = @NhanVienID and NgayChamCong  between @NgayBD_CongThang and  @NgayKT_CongThang and LoaiChamCongID in (SELECT LoaiChamCongID FROM NS_TL_LoaiChamCong where MaSo in(N'CTL',N'CXN',N'T') ))         
  RETURN ISNULL(@NCC,0)-ISNULL(@SoNgay,0)      
-    
 END      
-
-
 GO
 /****** Object:  UserDefinedFunction [dbo].[BHXH_TinhSoNgayNghi_KL]    Script Date: 03/04/2026 16:11:43 ******/
 SET ANSI_NULLS ON
@@ -414,11 +362,7 @@ declare @SoTien decimal(20,5)
 	from NS_BH_NgayThang where day(ngay)=15
 	and ngay between dateadd(mm,-6,@date) and dateadd(mm,-1,eomonth(@date)) ) as a)
 	return isnull(@SoTien,0)
-
-
 END
-
-
 GO
 /****** Object:  UserDefinedFunction [dbo].[Cloud_Nhanvien_CungPhongBan]    Script Date: 03/04/2026 16:11:43 ******/
 SET ANSI_NULLS ON
@@ -38989,20 +38933,6 @@ GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE PROCEDURE [dbo].[XD_XoaDangKyOTTC]
-(@ID INT,@LyDo NVARCHAR(100), @XDID INT , @YKien NVARCHAR(100))
-AS
-BEGIN
-
---declare @ID int = 6273
-
-UPDATE NS_TL_DangKyOT SET XetDuyet=1, YKienXetDuyet=@LyDo WHERE DangKyOTID=@ID
-	
-END
-
-GO
 /****** Object:  StoredProcedure [dbo].[XD_XoaNghiPhepD]    Script Date: 03/04/2026 16:11:45 ******/
 SET ANSI_NULLS ON
 GO
@@ -39021,30 +38951,8 @@ UPDATE ns_qtnghiphep SET XetDuyet = 2 where qtnghiphepid = @ID
 
 declare @date datetime=getdate()
 exec dbo.HS_UpdatePhepTheoQuyDinh @NhanVienID,@date
-
 	
 END
-
-GO
-/****** Object:  StoredProcedure [dbo].[XD_XoaNghiPhepTC]    Script Date: 03/04/2026 16:11:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE PROCEDURE [dbo].[XD_XoaNghiPhepTC]
-(@ID INT,@LyDo NVARCHAR(100), @XDID INT , @YKien NVARCHAR(100))
-AS
-BEGIN
-
---declare @ID int = 6273
-
-update ns_qtnghiphep set xetduyet = 1 where qtnghiphepid = @ID
-
-	
-END
-
-GO
 /****** Object:  StoredProcedure [dbo].[XetDuyetDeXuat]    Script Date: 03/04/2026 16:11:45 ******/
 SET ANSI_NULLS ON
 GO
@@ -39062,191 +38970,13 @@ update DX_DeXuat set XetDuyet = 1 where DeXuatID = @DeXuatID
 
 END
 
-
-
-
 GO
 /****** Object:  StoredProcedure [dbo].[XoaXetDuyetBiMatDon]    Script Date: 03/04/2026 16:11:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[XoaXetDuyetBiMatDon]
-AS
-BEGIN
-delete SYS_XetDuyet
-where ObjectCode = 'NS_QTNghiPhep' and (select count(*) from NS_QTNghiPhep where QTNghiPhepID = SYS_XetDuyet.ObjectID)=0
 
-delete SYS_XetDuyet
-where ObjectCode = 'NS_QTCongTac' and (select count(*) from NS_QTCongTac where QTCongTacID = SYS_XetDuyet.ObjectID)=0
-
-delete SYS_XetDuyet
-where ObjectCode = 'NS_TL_DangKyCong' and (select count(*) from NS_TL_DangKyCong where DangKyCongID = SYS_XetDuyet.ObjectID)=0
-
-delete SYS_XetDuyet
-where ObjectCode = 'NS_TL_DangKyOT' and (select count(*) from NS_TL_DangKyOT where DangKyOTID = SYS_XetDuyet.ObjectID)=0
-
-delete SYS_XetDuyet
-where ObjectCode = 'NS_TL_CC_TongHopTheoNgay_ChinhSua' and (select count(*) from NS_TL_CC_TongHopTheoNgay_ChinhSua where TongHopTheoNgay_ChinhSuaID = SYS_XetDuyet.ObjectID)=0
-
-delete SYS_XetDuyet
-where ObjectCode = 'SYS_LichSuThayDoiThongTin' and (select count(*) from SYS_LichSuThayDoiThongTin where LichSuThayDoiThongTinID = SYS_XetDuyet.ObjectID)=0
-
-delete WF_QuyTrinh_ThucHien
-where (select count(*) from SYS_XetDuyet where sys_xetduyet.xetduyetid = WF_QuyTrinh_ThucHien.XetDuyetID)=0
-END
-GO
-/****** Object:  StoredProcedure [dbo].[XuLyDonDuyetLoi]    Script Date: 03/04/2026 16:11:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE proc [dbo].[XuLyDonDuyetLoi]  
-as  
-  
---case bị double
-SELECT 
-    XetDuyetID, 
-    QuyTrinhBuocThucHienID, 
-    COUNT(*) AS SoLuong
-INTO #DoubleSteps
-FROM WF_QuyTrinh_ThucHien
-GROUP BY XetDuyetID, QuyTrinhBuocThucHienID
-HAVING COUNT(*) > 1
-ORDER BY XetDuyetID
-
---Xóa dòng bị trùng
-;WITH CTE AS (
-    SELECT *, ROW_NUMBER() OVER (
-        PARTITION BY XetDuyetID, QuyTrinhBuocThucHienID
-        ORDER BY QuyTrinhThucHienID -- Giữ lại dòng đầu tiên (thường là dòng cũ nhất)
-    ) rn
-    FROM WF_QuyTrinh_ThucHien
-    WHERE EXISTS (
-        SELECT 1 FROM #DoubleSteps ds
-        WHERE ds.XetDuyetID = WF_QuyTrinh_ThucHien.XetDuyetID
-          AND ds.QuyTrinhBuocThucHienID = WF_QuyTrinh_ThucHien.QuyTrinhBuocThucHienID
-    )
-)
-DELETE FROM CTE WHERE rn > 1
-
---update trạng thái với trường hợp bị double
-UPDATE xd
-SET xd.TrangThai = 1
-FROM SYS_XetDuyet xd
-WHERE xd.TrangThai = 0
-    AND EXISTS (
-        SELECT 1
-        FROM #DoubleSteps ds
-        WHERE ds.XetDuyetID = xd.XetDuyetID
-    )
-    AND NOT EXISTS (
-        SELECT 1 FROM WF_QuyTrinh_ThucHien qth
-        WHERE qth.XetDuyetID = xd.XetDuyetID AND qth.TrangThai = 0
-    )
-
---case ko nhảy bước 
-SELECT
-    xd.XetDuyetID,
-    xd.ObjectCode,
-    xd.ObjectID,
-    qt.QuyTrinhID,
-    qth1.QuyTrinhBuocThucHienID AS BuocHienTai,
-    bth1.ThuTu AS ThuTuBuocHienTai,
-    qth1.TrangThai AS TrangThai_BuocHienTai,
-    bth2.QuyTrinhBuocThucHienID AS BuocTiepTheo,
-    bth2.ThuTu AS ThuTuBuocTiepTheo
-INTO #MissingSteps
-FROM SYS_XetDuyet xd
-JOIN WF_QuyTrinh qt ON xd.QuyTrinhID = qt.QuyTrinhID
-JOIN WF_QuyTrinh_ThucHien qth1 ON xd.XetDuyetID = qth1.XetDuyetID
-JOIN WF_QuyTrinh_BuocThucHien bth1 ON qt.QuyTrinhID = bth1.QuyTrinhID AND qth1.QuyTrinhBuocThucHienID = bth1.QuyTrinhBuocThucHienID
-JOIN WF_QuyTrinh_BuocThucHien bth2 ON qt.QuyTrinhID = bth2.QuyTrinhID AND bth2.ThuTu = bth1.ThuTu + 1
-LEFT JOIN WF_QuyTrinh_ThucHien qth2 ON xd.XetDuyetID = qth2.XetDuyetID AND qth2.QuyTrinhBuocThucHienID = bth2.QuyTrinhBuocThucHienID
-WHERE qth1.TrangThai = 1 AND qth2.QuyTrinhThucHienID IS NULL
-AND CONVERT(DATE,xd.NgayTao) >= '2025-06-01'
-ORDER BY xd.XetDuyetID
-
-UPDATE qth
-SET qth.TrangThai = 0
-FROM WF_QuyTrinh_ThucHien qth
-JOIN #MissingSteps ms ON qth.XetDuyetID = ms.XetDuyetID AND qth.QuyTrinhBuocThucHienID = ms.BuocHienTai
-WHERE qth.TrangThai = 1
-
---case 3
-SELECT
-    xd.XetDuyetID,
-    xd.ObjectCode,
-    xd.ObjectID,
-    xd.TrangThai AS TrangThai_SYS_XetDuyet,
-    COUNT(DISTINCT qth.QuyTrinhBuocThucHienID) AS SoBuoc_DaDuyet,
-    (
-        SELECT COUNT(*) 
-        FROM WF_QuyTrinh_BuocThucHien bth
-        WHERE bth.QuyTrinhID = xd.QuyTrinhID
-    ) AS SoBuoc_QuyTrinh,
-    xd.QuyTrinhID
-INTO #Case3
-FROM SYS_XetDuyet xd
-INNER JOIN WF_QuyTrinh_ThucHien qth ON xd.XetDuyetID = qth.XetDuyetID
-WHERE xd.TrangThai = 0
-  AND NOT EXISTS (
-        SELECT 1 FROM WF_QuyTrinh_ThucHien qth2
-        WHERE qth2.XetDuyetID = xd.XetDuyetID AND qth2.TrangThai = -1
-  )
-GROUP BY xd.XetDuyetID, xd.ObjectCode, xd.ObjectID, xd.TrangThai, xd.QuyTrinhID
-HAVING 
-    COUNT(DISTINCT qth.QuyTrinhBuocThucHienID) = (
-        SELECT COUNT(*) FROM WF_QuyTrinh_BuocThucHien bth
-        WHERE bth.QuyTrinhID = xd.QuyTrinhID
-    )
---update xetduyet
-UPDATE xd
-SET xd.TrangThai = 1
-FROM SYS_XetDuyet xd
-JOIN #Case3 c3 ON xd.XetDuyetID = c3.XetDuyetID
-WHERE xd.TrangThai = 0
-
-UPDATE dx
-SET dx.XetDuyet = 1
-FROM DX_DEXUAT dx
-JOIN #Case3 c3 ON dx.DeXuatID = c3.ObjectID AND c3.ObjectCode = 'DX_DEXUAT'
-WHERE dx.XetDuyet = 0
-
-UPDATE np
-SET np.XetDuyet = 1
-FROM NS_QTNghiPhep np
-JOIN #Case3 c3 ON np.QTNghiPhepID = c3.ObjectID AND c3.ObjectCode = 'NS_QTNghiPhep'
-WHERE np.XetDuyet = 0
-
-UPDATE ct
-SET ct.XetDuyet = 1
-FROM dbo.NS_QTCongTac ct
-JOIN #Case3 c3 ON ct.QTCongTacID = c3.ObjectID AND c3.ObjectCode = 'NS_QTCongTac'
-WHERE ct.XetDuyet = 0
-
-UPDATE ot
-SET ot.XetDuyet = 1
-FROM dbo.NS_TL_DangKyOT ot
-JOIN #Case3 c3 ON ot.DangKyOTID = c3.ObjectID AND c3.ObjectCode = 'NS_TL_DangKyOT'
-WHERE ot.XetDuyet = 0
-
-UPDATE cs
-SET cs.XetDuyet = 1
-FROM dbo.NS_TL_CC_TongHopTheoNgay_ChinhSua cs
-JOIN #Case3 c3 ON cs.TongHopTheoNgay_ChinhSuaID = c3.ObjectID AND c3.ObjectCode = 'NS_TL_CC_TongHopTheoNgay_ChinhSua'
-WHERE cs.XetDuyet = 0
-
-UPDATE tt
-SET tt.XetDuyet = 1
-FROM dbo.SYS_LichSuThayDoiThongTin tt
-JOIN #Case3 c3 ON tt.LichSuThayDoiThongTinID = c3.ObjectID AND c3.ObjectCode = 'SYS_LichSuThayDoiThongTin'
-WHERE tt.XetDuyet = 0
-
-DROP TABLE #DoubleSteps,#MissingSteps,#Case3
-
-
-GO
 /****** Object:  StoredProcedure [dbo].[XuLyImportDGNhanVien]    Script Date: 03/04/2026 16:11:45 ******/
 SET ANSI_NULLS ON
 GO
